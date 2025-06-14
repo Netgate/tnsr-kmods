@@ -1,0 +1,26 @@
+#
+# module name and path
+#
+MODULE = 8500_leds
+MODULE_PATH = drivers/leds/8500_leds
+
+SRCDIR := $(CURDIR)
+VPATH += $(SRCDIR)
+
+KERNEL_DIR ?= /usr/lib/modules/$(KERNELRELEASE)/build
+
+obj-m		+= $(MODULE).o
+
+.PHONY: default
+default: build
+
+build module all: $(MODULE).ko
+
+$(MODULE).ko:
+	$(MAKE) -C $(KERNEL_DIR) M=$(CURDIR) O=$(KERNEL_DIR)
+
+install:
+	$(MAKE) -C $(KERNEL_DIR) M=$(CURDIR) O=$(KERNEL_DIR) modules_install
+
+clean:
+	$(MAKE) -C $(KERNEL_DIR) M=$(CURDIR) O=$(KERNEL_DIR) clean

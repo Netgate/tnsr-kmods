@@ -1,0 +1,10 @@
+*.o
+*.ko
+*.mod
+*.mod.*
+.*cmd
+#*
+.#*
+modules.order
+Module.symvers
+build-root/

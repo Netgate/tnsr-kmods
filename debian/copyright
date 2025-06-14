@@ -1,0 +1,10 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: 8500-leds
+Source: https://www.netgate.com
+
+Files: debian/*
+Copyright: 
+
+License: <special license>
+  Copyright 2021 Rubicon Communications, LLC.
+  All rights reserved.

@@ -1,0 +1,12 @@
+Source: tnsr-kmods
+Section: unknown
+Priority: optional
+Maintainer: Netgate <support@netgate.com>
+Build-Depends: debhelper (>=9), dkms, dh-dkms <!tnsr-pkgs.jammy>
+Standards-Version: 3.9.8
+Homepage: https://www.netgate.com
+
+Package: tnsr-kmods
+Architecture: all
+Depends: ${misc:Depends}, dkms (>=2.2)
+Description: TNSR kernel module

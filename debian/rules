@@ -1,0 +1,47 @@
+#!/usr/bin/make -f
+# You must remove unused comment lines for the released package.
+export DH_VERBOSE = 1
+
+%:
+	dh $@  --with dkms
+
+# to use DEB_VERSION_EPOCH_UPSTREAM variable
+include /usr/share/dpkg/pkg-info.mk
+
+DKMS_PKG_BASE_NAME=tnsr-kmods
+DKMS_PKG_VERSION=$(shell echo $(DEB_VERSION_EPOCH_UPSTREAM) | cut -f1 -d~)
+DKMS_PKG_NAME=$(DKMS_PKG_BASE_NAME)-$(DKMS_PKG_VERSION)
+
+# install sources to DKMS folders
+# install autoload module configuration
+override_dh_install:
+	dh_install module/8500_leds.c usr/src/$(DKMS_PKG_NAME)/
+	dh_install extras/conf/dkms.conf usr/src/$(DKMS_PKG_NAME)/
+	@cp extras/conf/Makefile.dkms extras/conf/Makefile
+	dh_install extras/conf/Makefile usr/src/$(DKMS_PKG_NAME)
+	dh_install extras/conf/8500-leds-modules.conf etc/modules-load.d/
+
+# Run all necessary commands after the module be prepared
+override_dh_dkms:
+	dh_dkms -V $(DKMS_PKG_VERSION)
+
+# TODO: This is a hack, so it should be replaced to more reliable method
+#
+# Replace all #BASENAME# and #VERSION# entries in the 'postinst' and 'prerm' scripts
+# before calling dh_installdeb
+# entries have format to migrate easily to a newer debhelper version
+# using arguments: 'dh_install --define BASENAME=8500-leds VERSION=20.06'
+override_dh_installdeb:
+	@for f in debian/postinst debian/prerm; do \
+		sed \
+			-e "s/#BASENAME#/$(DKMS_PKG_BASE_NAME)/g" \
+			-e "s/#VERSION#/$(DKMS_PKG_VERSION)/g" \
+			$${f}.in > $$f; \
+	done
+	dh_installdeb
+
+#override_dh_auto_configure:
+#override_dh_auto_build:
+#override_dh_auto_test:
+#override_dh_auto_install:
+#override_dh_auto_clean:
