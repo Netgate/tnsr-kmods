@@ -2,7 +2,7 @@ Source: tnsr-kmods
 Section: unknown
 Priority: optional
 Maintainer: Netgate <support@netgate.com>
-Build-Depends: debhelper (>=9), dkms, dh-dkms <!tnsr-pkgs.jammy>
+Build-Depends: debhelper-compat (= 13), dkms, dh-dkms <!tnsr-pkgs.jammy>
 Standards-Version: 3.9.8
 Homepage: https://www.netgate.com
 
