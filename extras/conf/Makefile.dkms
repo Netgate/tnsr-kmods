@@ -1,22 +1,20 @@
 #
-# module name and path
+# module names
 #
-MODULE = 8500_leds
-MODULE_PATH = drivers/leds/8500_leds
+MODULES = 8500_leds ibiza_leds
 
 SRCDIR := $(CURDIR)
 VPATH += $(SRCDIR)
 
 KERNEL_DIR ?= /usr/lib/modules/$(KERNELRELEASE)/build
 
-obj-m		+= $(MODULE).o
+obj-m		+= $(addsuffix .o,$(MODULES))
 
 .PHONY: default
 default: build
 
-build module all: $(MODULE).ko
-
-$(MODULE).ko:
+.PHONY: build module all
+build module all:
 	$(MAKE) -C $(KERNEL_DIR) M=$(CURDIR) O=$(KERNEL_DIR)
 
 install:

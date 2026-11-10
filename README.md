@@ -58,6 +58,56 @@ Stop blinking and turn off:
 # echo 0 > /sys/class/leds/led8500:blue:2/brightness
 ```
 
+## Netgate 5200 / 7200 (Ibiza) LED and reset button driver
+
+`ibiza_leds` binds to the embedded controller's ACPI device `SILC1003`
+(only on systems whose DMI says Netgate 5200 or 7200, unless loaded
+with `ignore_dmi=1`). It is loaded automatically via its ACPI modalias; the
+TNSR initramfs hook also loads it early so that the "booting" LED
+pattern is shown.
+
+Available LEDs, named by their position on the front panel (diamond,
+square and circle on the 5200, top to bottom):
+```console
+# ls -d /sys/class/leds/ibiza:*
+/sys/class/leds/ibiza:multicolor:top      # RGB, top
+/sys/class/leds/ibiza:multicolor:middle   # RGB, middle
+/sys/class/leds/ibiza:multicolor:bottom   # RGB, bottom
+/sys/class/leds/ibiza:amber:top           # amber, same light pipe as the top LED
+/sys/class/leds/ibiza:amber:middle        # amber, same light pipe as the middle LED
+/sys/class/leds/ibiza:amber:bottom        # amber, same light pipe as the bottom LED
+```
+
+Setting a colour and turning a RGB LED on:
+```console
+# echo 0 0 255 > /sys/class/leds/ibiza:multicolor:bottom/multi_intensity
+# echo 255 > /sys/class/leds/ibiza:multicolor:bottom/brightness
+```
+
+Hardware blinking of a RGB LED (delays in ms, default 500/500):
+```console
+# echo timer > /sys/class/leds/ibiza:multicolor:bottom/trigger
+# echo 125 > /sys/class/leds/ibiza:multicolor:bottom/delay_on
+# echo 125 > /sys/class/leds/ibiza:multicolor:bottom/delay_off
+```
+
+Stop blinking and turn off:
+```console
+# echo none > /sys/class/leds/ibiza:multicolor:bottom/trigger
+# echo 0 > /sys/class/leds/ibiza:multicolor:bottom/brightness
+```
+
+The amber LEDs are on/off only (`max_brightness` is 1).
+
+The reset button is line 0 (`RESET_BUTTON`) of the gpiochip labelled
+`ibiza-ec`. Like the reset button GPIO on the 8300/8500 it is active
+low, so `gpiomon -l ibiza-ec 0` prints 1 on press and 0 on release.
+The driver switches the embedded controller to "host handles the reset
+button" mode on load and restores the previous mode on unload.
+
+For testing without pressing the button, write 1 (press) or 0
+(release) to `/sys/kernel/debug/ibiza_leds/button`.
+
 ## LED simulator
 
 There's a simple LED simulator provided that prints which LEDs are

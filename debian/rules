@@ -16,6 +16,7 @@ DKMS_PKG_NAME=$(DKMS_PKG_BASE_NAME)-$(DKMS_PKG_VERSION)
 # install autoload module configuration
 override_dh_install:
 	dh_install module/8500_leds.c usr/src/$(DKMS_PKG_NAME)/
+	dh_install module/ibiza_leds.c usr/src/$(DKMS_PKG_NAME)/
 	dh_install extras/conf/dkms.conf usr/src/$(DKMS_PKG_NAME)/
 	@cp extras/conf/Makefile.dkms extras/conf/Makefile
 	dh_install extras/conf/Makefile usr/src/$(DKMS_PKG_NAME)

@@ -1,2 +1,2 @@
 ccflags-y := $(MODULE_CFLAGS)
-obj-m := 8500_leds.o
+obj-m := 8500_leds.o ibiza_leds.o
